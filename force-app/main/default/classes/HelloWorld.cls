@@ -1,7 +1,7 @@
 public class HelloWorld {
 
     public static void printHello(){
-        System.debug('Production');
+        System.debug('Production 2');
     }
 
 }
