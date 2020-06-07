@@ -61,11 +61,16 @@ stage('Deploye Code') {
 
 			println rc
 			
+            if (isUnix()) {
+				rmsg = sh returnStdout: true, script: "sfdx force:source:convert -r force-app/main/default cicd -d deploy"
+			}else{
+			   rmsg = bat returnStdout: true, script: "sfdx force:source:convert -r force-app/main/default cicd -d deploy"
+			}
 			// need to pull out assigned username
 			if (isUnix()) {
-				rmsg = sh returnStdout: true, script: "sfdx force:mdapi:deploy -w 3 -d manifest/. -u ${HUB_ORG}"
+				rmsg = sh returnStdout: true, script: "sfdx force:mdapi:deploy -w 3 -d deploy. -u ${HUB_ORG}"
 			}else{
-			   rmsg = bat returnStdout: true, script: "sfdx force:mdapi:deploy -w 3 -d manifest/. -u ${HUB_ORG}"
+			   rmsg = bat returnStdout: true, script: "sfdx force:mdapi:deploy -w 3 -d deploy -u ${HUB_ORG}"
 			}
 			  
             printf rmsg
