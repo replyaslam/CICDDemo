@@ -62,9 +62,9 @@ stage('Deploye Code') {
 			println rc
 			
             if (isUnix()) {
-				rmsg = sh returnStdout: true, script: "sfdx force:source:convert -r force-app/main/default cicd -d deploy"
+				rmsg = sh returnStdout: true, script: "sfdx force:source:convert -r force-app/main/default  -d deploy"
 			}else{
-			   rmsg = bat returnStdout: true, script: "sfdx force:source:convert -r force-app/main/default cicd -d deploy"
+			   rmsg = bat returnStdout: true, script: "sfdx force:source:convert -r force-app/main/default  -d deploy"
 			}
 			// need to pull out assigned username
 			if (isUnix()) {
