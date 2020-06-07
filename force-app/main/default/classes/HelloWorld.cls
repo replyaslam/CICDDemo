@@ -1,7 +1,7 @@
 public class HelloWorld {
 
     public static void printHello(){
-        System.debug('Hello UAT Branch');
+        System.debug('Hello World UAT Branch');
     }
 
 }
