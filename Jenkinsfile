@@ -17,7 +17,7 @@ node {
 
     def DEVELOPER_CONSUMER_KEY="3MVG97quAmFZJfVxLVIrarqTf60vzrfrFpKyffK.cB9CL30cOIyD9Tp.oaejCic5R3mu.ru7.8g=="
     def PRODUCTION_CONSUMER_KEY="3MVG97quAmFZJfVz6cc3ZtNrDoeF4sSsdx1gZl0s9JCdwCMl4v2DFwOVivYJvVh4up5DnujsgLlitAKX5e9ro"
-    def UAT_CONSUMER_KEY="3MVG97quAmFZJfVwLLlI2u1B0SppXFxUl0aftSMNxSDTK_GR12p694ij4TdBDQ64nbi.ris8BpzLPhejWABL7"
+    def UAT_CONSUMER_KEY="3MVG97quAmFZJfVwLLlI2u1B0Sv.QhsvqIcFtDUZgrt1qXk0.JpHW.yaxFnlvwdAuCmDP5ihAqoM_hBg5_FCi"
     def branchname
     
     branchname=scm.branches[0].name
@@ -51,28 +51,34 @@ node {
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
 
         if(CONNECTED_APP_CONSUMER_KEY){
-stage('Deploye Code') {
-            if (isUnix()) {
-                rc = sh returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-            }else{
-                 rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
-            }
-            if (rc != 0) { error 'hub org authorization failed' }
+ stage('Autherising Org') {
+                if (isUnix()) {
+                    rc = sh returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile ${jwt_key_file} --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+            }else {
+                    rc = bat returnStatus: true, script: "sfdx force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile \"${jwt_key_file}\" --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
+                }
+                if (rc != 0) { error 'hub org authorization failed' }
 
-			println rc
-			
-			// need to pull out assigned username
-			if (isUnix()) {
-				rmsg = sh returnStdout: true, script: "sfdx force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
-			}else{
-			   rmsg = bat returnStdout: true, script: "sfdx force:mdapi:deploy -d manifest/. -u ${HUB_ORG}"
-			}
-			  
-            printf rmsg
-            println('Hello from a Job DSL script!')
-            println(rmsg)
-        }
-        
-        }
+                println rc
+            }
+            stage('Creating deploy directory') {
+                if (isUnix()) {
+                    rmsg = sh returnStdout: true, script: 'sfdx force:source:convert -r force-app/main/default  -d deploy'
+            }else {
+                    rmsg = bat returnStdout: true, script: 'sfdx force:source:convert -r force-app/main/default  -d deploy'
+                }
+            }
+            stage('Deploying Code') {
+                // need to pull out assigned username
+                if (isUnix()) {
+                    rmsg = sh returnStdout: true, script: "sfdx force:mdapi:deploy -w 3 -d deploy. -u ${HUB_ORG}"
+            }else {
+                    rmsg = bat returnStdout: true, script: "sfdx force:mdapi:deploy -w 3 -d deploy -u ${HUB_ORG}"
+                }
+
+                printf rmsg
+                println('Hello from a Job DSL script!')
+                println(rmsg)
+            }       }
     }
 }
