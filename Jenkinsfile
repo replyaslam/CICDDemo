@@ -34,6 +34,8 @@ node {
         HUB_ORG=PRODUCTION_HUB_ORG
         CONNECTED_APP_CONSUMER_KEY=PRODUCTION_CONSUMER_KEY
     }
+    println sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
+
     println 'Branch is'
     println branchname 
     println JWT_KEY_CRED_ID
