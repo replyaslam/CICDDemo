@@ -85,18 +85,3 @@ node {
             }       }
     }
 }
-/** @return The tag name, or `null` if the current commit isn't a tag. */
-String gitTagName() {
-    commit = getCommit()
-    if (commit) {
-        desc = bat returnStdout: true, script: "git describe --tags ${commit}".trim()
-        if (isTag(desc)) {
-            return desc
-        }
-    }
-    return null
-}
-
-String getCommit() {
-    return bat returnStdout: true, script: "git rev-parse HEAD"
-}
