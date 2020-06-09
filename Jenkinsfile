@@ -34,7 +34,8 @@ node {
         HUB_ORG=PRODUCTION_HUB_ORG
         CONNECTED_APP_CONSUMER_KEY=PRODUCTION_CONSUMER_KEY
     }
-    println gitTagName()
+    rmsg = bat returnStdout: true, script: "git tag --sort version:refname"
+    println rmsg
 
     println 'Branch is'
     println branchname 
