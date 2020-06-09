@@ -22,18 +22,7 @@ node {
     
     branchname=scm.branches[0].name
 
-    if(branchname.contains('develop')) { 
-        HUB_ORG=DEVELOPER_HUB_ORG
-        CONNECTED_APP_CONSUMER_KEY=DEVELOPER_CONSUMER_KEY
-    }
-    else if(branchname.contains('UAT')) { 
-        HUB_ORG=UAT_HUB_ORG
-        CONNECTED_APP_CONSUMER_KEY=UAT_CONSUMER_KEY
-    }
-    else if(branchname.contains('Production')) { 
-        HUB_ORG=PRODUCTION_HUB_ORG
-        CONNECTED_APP_CONSUMER_KEY=PRODUCTION_CONSUMER_KEY
-    }
+    
   
 
     println 'Branch is'
@@ -51,7 +40,22 @@ node {
     }
 
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
+  currentTag = bat returnStdout: true, script: "git describe"
+    println 'Tag Name:'
 
+    println currentTag
+if(currentTag.contains('develop')) { 
+        HUB_ORG=DEVELOPER_HUB_ORG
+        CONNECTED_APP_CONSUMER_KEY=DEVELOPER_CONSUMER_KEY
+    }
+    else if(currentTag.contains('UAT')) { 
+        HUB_ORG=UAT_HUB_ORG
+        CONNECTED_APP_CONSUMER_KEY=UAT_CONSUMER_KEY
+    }
+    else if(currentTag.contains('Production')) { 
+        HUB_ORG=PRODUCTION_HUB_ORG
+        CONNECTED_APP_CONSUMER_KEY=PRODUCTION_CONSUMER_KEY
+    }
         if(CONNECTED_APP_CONSUMER_KEY){
  stage('Autherising Org') {
                 if (isUnix()) {
@@ -62,10 +66,7 @@ node {
                 if (rc != 0) { error 'hub org authorization failed' }
 
                 println rc
-                  rmsg = bat returnStdout: true, script: "git describe"
-    println 'Tag Name:'
-
-    println rmsg
+                
             }
             stage('Creating deploy directory') {
                 if (isUnix()) {
