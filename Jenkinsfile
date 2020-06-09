@@ -34,7 +34,7 @@ node {
         HUB_ORG=PRODUCTION_HUB_ORG
         CONNECTED_APP_CONSUMER_KEY=PRODUCTION_CONSUMER_KEY
     }
-    println sh(returnStdout: true, script: "git tag --sort version:refname | tail -1").trim()
+    println gitTagName()
 
     println 'Branch is'
     println branchname 
@@ -83,4 +83,15 @@ node {
                 println(rmsg)
             }       }
     }
+}
+/** @return The tag name, or `null` if the current commit isn't a tag. */
+String gitTagName() {
+    commit = getCommit()
+    if (commit) {
+        desc = sh(script: "git describe --tags ${commit}", returnStdout: true)?.trim()
+        if (isTag(desc)) {
+            return desc
+        }
+    }
+    return null
 }
