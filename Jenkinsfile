@@ -88,7 +88,7 @@ node {
 String gitTagName() {
     commit = getCommit()
     if (commit) {
-        desc = sh(script: "git describe --tags ${commit}", returnStdout: true)?.trim()
+        desc = bat returnStdout: true, script: "git describe --tags ${commit}".trim()
         if (isTag(desc)) {
             return desc
         }
@@ -97,5 +97,5 @@ String gitTagName() {
 }
 
 String getCommit() {
-    return sh(script: 'git rev-parse HEAD', returnStdout: true)?.trim()
+    return bat returnStdout: true, script: "git rev-parse HEAD"
 }
