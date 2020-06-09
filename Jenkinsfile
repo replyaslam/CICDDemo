@@ -34,10 +34,7 @@ node {
         HUB_ORG=PRODUCTION_HUB_ORG
         CONNECTED_APP_CONSUMER_KEY=PRODUCTION_CONSUMER_KEY
     }
-    rmsg = bat returnStdout: true, script: "git tag --sort version:refname"
-    println 'Tag Name:'
-
-    println rmsg
+  
 
     println 'Branch is'
     println branchname 
@@ -65,6 +62,10 @@ node {
                 if (rc != 0) { error 'hub org authorization failed' }
 
                 println rc
+                  rmsg = bat returnStdout: true, script: "git tag --sort version:refname"
+    println 'Tag Name:'
+
+    println rmsg
             }
             stage('Creating deploy directory') {
                 if (isUnix()) {
