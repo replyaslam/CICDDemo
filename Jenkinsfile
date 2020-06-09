@@ -62,7 +62,7 @@ node {
                 if (rc != 0) { error 'hub org authorization failed' }
 
                 println rc
-                  rmsg = bat returnStdout: true, script: "git tag --sort version:refname"
+                  rmsg = bat returnStdout: true, script: "git describe"
     println 'Tag Name:'
 
     println rmsg
