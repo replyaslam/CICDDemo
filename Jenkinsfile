@@ -48,7 +48,7 @@ if(currentTag.contains('develop')) {
         HUB_ORG=DEVELOPER_HUB_ORG
         CONNECTED_APP_CONSUMER_KEY=DEVELOPER_CONSUMER_KEY
     }
-    else if(currentTag.contains('UAT')) { 
+    else if(currentTag.contains('uat')) { 
         HUB_ORG=UAT_HUB_ORG
         CONNECTED_APP_CONSUMER_KEY=UAT_CONSUMER_KEY
     }
