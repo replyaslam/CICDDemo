@@ -19,7 +19,7 @@ node {
     def PRODUCTION_CONSUMER_KEY="3MVG97quAmFZJfVz6cc3ZtNrDoeF4sSsdx1gZl0s9JCdwCMl4v2DFwOVivYJvVh4up5DnujsgLlitAKX5e9ro"
     def UAT_CONSUMER_KEY="3MVG97quAmFZJfVwLLlI2u1B0SppXFxUl0aftSMNxSDTK_GR12p694ij4TdBDQ64nbi.ris8BpzLPhejWABL7"
     def branchname
-    
+    //test1
     branchname=scm.branches[0].name
 
     if(branchname.contains('develop')) { 
